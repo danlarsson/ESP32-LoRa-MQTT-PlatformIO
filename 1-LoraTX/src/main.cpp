@@ -15,7 +15,7 @@
 // Lora frequence Select
 //433E6 for Asia
 #define BAND 866E6
-#define SPRED 12      // Spreading Factor - ranges from 6-12,default 7
+#define SPRED 8      // Spreading Factor - ranges from 6-12,default 7
 
 // Define the LED pin 
 // [TTGO32 LoRa OLED]
