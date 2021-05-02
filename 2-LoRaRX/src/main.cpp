@@ -17,11 +17,11 @@
 #define BAND 866E6
 #define SPRED 8      // Spreading Factor - ranges from 6-12,default 7
 
-// LED pin 
-// [TTGO32 LoRa OLED]
-#define LED 2
-// [TTGO32 T-Beam]
-//#define LED 14
+// Define the LED pin 
+// [TTGO32 LoRa OLED]  GPIO 2
+// [TTGO32 T-Beam]  GPIO 14
+#define LED LED_BUILTIN    // Use PlatformIO board configuration
+
 
 void setup() {
   Serial.begin(115200);  // Set Serial port speed
