@@ -20,13 +20,14 @@
 // Define the LED pin 
 // [TTGO32 LoRa OLED]  GPIO 2
 // [TTGO32 T-Beam]  GPIO 14
-#define LED LED_BUILTIN    // Use PlatformIO board configuration
-
+#ifndef LED_BUILTIN  // If not set in IDE
+  #define LED_BUILTIN  2  // Use PlatformIO board configuration
+#endif
 
 void setup() {
   Serial.begin(115200);  // Set serial port speed
 
-  pinMode(LED, OUTPUT);  // Set LED pin to Output
+  pinMode(LED_BUILTIN, OUTPUT);  // Set LED pin to Output
 
   Serial.println("Welcome to LoRa TX");
   
@@ -39,16 +40,25 @@ void setup() {
   if (!LoRa.begin(BAND)) {
     Serial.println("Starting LoRa failed!");
     while (1);
+
   }
   
   // Set LoRa Spreading Factor
-  LoRa.setSpreadingFactor(SPRED);           
+  LoRa.setSpreadingFactor(SPRED);
+
+  // Test CRC  https://github.com/sandeepmistry/arduino-LoRa/issues/261
+  // LoRa.enableCrc();
+
+  // Test Sync Word to make a "hidden" network (default 0x34)
+  // LoRa.setSyncWord(0x42);
+
+
   Serial.println("LoRa started"); 
 }
 
 
 void loop() {
-  digitalWrite(LED, HIGH);   // LED ON
+  digitalWrite(LED_BUILTIN, HIGH);   // LED ON
   Serial.println("Sending packet");
 
   LoRa.beginPacket();         // Starting LoRa TX
@@ -58,7 +68,7 @@ void loop() {
   LoRa.endPacket();          // Ending LoRa TX
 
   Serial.println("Packet sent");
-  digitalWrite(LED, LOW);    //LED OFF
+  digitalWrite(LED_BUILTIN, LOW);    //LED OFF
 
   delay(5000);   // Wait for 5 seconds
 }

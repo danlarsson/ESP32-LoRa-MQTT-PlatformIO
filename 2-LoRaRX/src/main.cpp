@@ -20,13 +20,15 @@
 // Define the LED pin 
 // [TTGO32 LoRa OLED]  GPIO 2
 // [TTGO32 T-Beam]  GPIO 14
-#define LED LED_BUILTIN    // Use PlatformIO board configuration
+#ifndef LED_BUILTIN  // If not set in IDE
+  #define LED_BUILTIN  2  // Use PlatformIO board configuration
+#endif
 
 
 void setup() {
   Serial.begin(115200);  // Set Serial port speed
 
-  pinMode(LED, OUTPUT);  // Set LED pin to Output data.
+  pinMode(LED_BUILTIN, OUTPUT);  // Set LED pin to Output data.
 
   Serial.println("Welcome to LoRa RX!");
   
@@ -42,6 +44,13 @@ void setup() {
   }
   
   LoRa.setSpreadingFactor(SPRED);           // ranges from 6-12, default 7 see API docs
+
+  // Test CRC https://github.com/sandeepmistry/arduino-LoRa/issues/261
+  // LoRa.enableCrc();
+
+  // Test Sync Word to make a "hidden" network (default 0x34)
+  // LoRa.setSyncWord(0x42);
+
   Serial.println("LoRa started"); 
 }
 
@@ -51,10 +60,11 @@ String LoRaData;  // A place to save the LoRa RX
 void loop() {
   int packetSize = LoRa.parsePacket();
   if (packetSize) {
-    digitalWrite(LED, HIGH);  // LED ON
-
+    digitalWrite(LED_BUILTIN, HIGH);  // LED ON
+   
     Serial.print("Recieved Packet: ");
 
+    // long freqErr = LoRa.packetFrequencyError();   // frequency offset between the receiver centre frequency and that of an incoming LoRa signal
     int rssi = LoRa.packetRssi();  // Get the Signal Strength 
     int snr = LoRa.packetSnr();    // Get the Signal to Noice Ratio
     
@@ -71,6 +81,6 @@ void loop() {
     Serial.println(snr);
     Serial.println("");  // Empty Line
 
-    digitalWrite(LED, LOW);  // LED OFF
+    digitalWrite(LED_BUILTIN, LOW);  // LED OFF
   }
 }
