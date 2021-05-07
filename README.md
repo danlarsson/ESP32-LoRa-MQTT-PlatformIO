@@ -4,3 +4,5 @@ Liten kurs för att som slutmål kunna mäta av en sensor, till exempel en DS18B
 
 Vi använder PlatformIO under VSCode för att hantera koden, även om det säkert går bra att använda Arduinos eget IDE med små förändringar.
 
+Koden är utvecklad för "TTGO ESP32 LoRa OLED" kort, men bör fungera bra på andra LoRa-kort men man får kanske ändra GPIO-pinnarna.
+
