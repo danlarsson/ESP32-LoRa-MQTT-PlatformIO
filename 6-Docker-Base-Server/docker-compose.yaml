@@ -1,0 +1,45 @@
+version: "3.7"
+
+services:
+  mqtt:
+    image: eclipse-mosquitto:latest
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      #- "9001:9001"
+    volumes:
+      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mqtt/log:/mosquitto/log
+      - ./mqtt/data/:/mosquitto/data
+
+  influxdb:
+    restart: unless-stopped
+    image: influxdb:latest
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./influxdb/data:/var/lib/influxdb2
+      - ./influxdb/etc:/etc/influxdb2
+    
+  nodered:
+    image: nodered/node-red-docker:v8
+    depends_on:
+      - mqtt
+    ports:
+      - "1880:1880"
+    links:
+      - mqtt
+    volumes:
+      - ./nodered:/data
+  
+  grafana:
+    image: grafana/grafana:latest
+    depends_on:
+      - influxdb
+    ports: 
+      - "3000:3000"
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+
